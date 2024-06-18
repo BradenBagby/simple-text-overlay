@@ -1,13 +1,16 @@
-import { myPackage } from '../src';
+import { buildImage } from '../src/build-image';
 
 describe('index', () => {
-  describe('myPackage', () => {
-    it('should return a string containing the message', () => {
-      const message = 'Hello';
-
-      const result = myPackage(message);
-
-      expect(result).toMatch(message);
+  describe('simple-text-overlay', () => {
+    it('should generate captions for a video', async () => {
+      await buildImage(
+        'Hello World',
+        {
+          fontPath: `${__dirname}../test/resources/Roboto-Regular.ttf`,
+          fontSize: 48,
+        },
+        { width: 600, height: 2000 }
+      );
     });
   });
 });
