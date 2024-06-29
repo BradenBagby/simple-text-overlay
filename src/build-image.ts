@@ -1,14 +1,7 @@
+import { CanvasRenderingContext2D, createCanvas } from 'canvas';
 import ffmpeg from 'fluent-ffmpeg';
-import * as gm from 'gm';
-import { Bounds, OverlayConfig } from './types';
-import {
-  createCanvas,
-  loadImage,
-  Canvas,
-  registerFont,
-  CanvasRenderingContext2D,
-} from 'canvas';
 import { writeFileSync } from 'fs';
+import { Bounds, OverlayConfig } from './types';
 
 export const buildCaption = async (
   text: string,
@@ -16,58 +9,69 @@ export const buildCaption = async (
   bounds: Bounds,
   outputPath: string
 ): Promise<void> => {
-  console.log('called');
   const canvas = createCanvas(bounds.width, bounds.height);
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('could not get canvas context');
 
-  ctx.font = `${config.fontSize}px Arial`;
-  ctx.fillStyle = 'white';
-  ctx.textAlign = 'center';
-
-  const maxWidth = bounds.width * 0.8; // Optional: Adjust based on your needs
-  const lineHeight = config.fontSize * 1.2;
-
-  const wrapText = (
-    context: CanvasRenderingContext2D,
-    text: string,
-    x: number,
-    y: number,
-    maxWidth: number,
-    lineHeight: number
-  ) => {
-    const words = text.split(' ');
-    let line = '';
-    let yPos = y;
-
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + ' ';
-      const metrics = context.measureText(testLine);
-      const testWidth = metrics.width;
-
-      if (testWidth > maxWidth && n > 0) {
-        context.fillText(line, x, yPos);
-        line = words[n] + ' ';
-        yPos += lineHeight;
-      } else {
-        line = testLine;
-      }
-    }
-
-    context.fillText(line, x, yPos);
+  const setContext = () => {
+    ctx.font = `${config.fontSize}px Arial`;
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
   };
+  setContext();
 
-  wrapText(
-    ctx,
-    text,
-    canvas.width / 2,
-    canvas.height / 2,
-    maxWidth,
-    lineHeight
-  );
+  // calcluate
+  const maxWidth = bounds.width - 32; // TODO: padding
+  const lineHeight = config.fontSize * 1;
+  const lines = getLines(ctx, text, maxWidth);
+  const height = lines.length * lineHeight;
+  console.log('lines', lines);
+  if (height > bounds.height) throw new Error('text too long to fit in bounds');
+  canvas.height = height;
+  setContext();
+
+  console.log('height: ', height);
+
+  // draw
+  let yPos = lineHeight;
+  for (let i = 0; i < lines.length; i++) {
+    console.log(yPos);
+    const line = lines[i];
+    ctx.fillText(line, bounds.width / 2, yPos);
+    yPos += lineHeight;
+  }
 
   const buffer = canvas.toBuffer('image/png');
   writeFileSync(outputPath, buffer);
+};
+
+/**
+ * Split caption into lines that will fit into max width
+ */
+const getLines = (
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number
+) => {
+  const words = text.split(' ');
+  let line = '';
+  const lines: string[] = [];
+
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      lines.push(line);
+      line = words[n] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+
+  if (line.length) lines.push(line.trim());
+
+  return lines;
 };
 
 type GetFontSizeArgs = {
