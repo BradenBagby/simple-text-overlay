@@ -25,21 +25,27 @@ export const addOverlay = async (
   for (let i = 0; i < overlays.length; i++) {
     const overlay = overlays[i];
     const path = join(tempDir, `${i}.png`);
-    imageOverlays.push({ ...overlay, path });
-    await buildCaption(overlay.text, bounds, path, config);
+    const { width, height } = await buildCaption(
+      overlay.text,
+      bounds,
+      path,
+      config
+    );
+    imageOverlays.push({ ...overlay, path, width, height });
   }
 
   // overlay each caption on the video
-  await overlayImagesOnVideo(src, imageOverlays, output);
+  await overlayImagesOnVideo(src, imageOverlays, output, config);
 };
 
-type ImageOverlay = Overlay & { path: string };
+type ImageOverlay = Overlay & { path: string; width: number; height: number };
 const overlayImagesOnVideo = async (
   src: string,
   overlays: ImageOverlay[],
-  output: string
+  output: string,
+  config?: OverlayConfig
 ) => {
-  const bottomPadding = 16; // TODO:
+  const margin = config?.overlayMargin || 0;
 
   // Construct the ffmpeg command
   const command = ffmpeg();
@@ -48,11 +54,63 @@ const overlayImagesOnVideo = async (
   // Start building complex filter string
   const filters: string[] = [];
   let last = '[0:v]';
+
+  const getPosition = (overlay: ImageOverlay) => {
+    let x = '0';
+    let y = '0';
+
+    const centerX = `(main_w-overlay_w)/2 - ${overlay.width / 2}`;
+    const centerY = `(main_h-overlay_h)/2 - ${overlay.height / 2}`;
+    const yBottom = `main_h-overlay_h-${margin + overlay.height}`;
+    const xRight = `main_w-overlay_w-${margin + overlay.width}`;
+
+    switch (config?.overlayAlign) {
+      case 'topLeft':
+        x = `${margin}`;
+        y = `${margin}`;
+        break;
+      case 'centerLeft':
+        x = `${margin}`;
+        y = centerY;
+        break;
+      case 'bottomLeft':
+        x = `${margin}`;
+        y = yBottom;
+        break;
+      case 'topCenter':
+        x = centerX;
+        y = `${margin}`;
+        break;
+      case 'centerCenter':
+        x = centerX;
+        y = centerY;
+        break;
+      case 'topRight':
+        x = xRight;
+        y = `${margin}`;
+        break;
+      case 'centerRight':
+        x = xRight;
+        y = centerY;
+        break;
+      case 'bottomRight':
+        x = xRight;
+        y = yBottom;
+        break;
+      default:
+        // bottomCenter is default
+        x = centerX;
+        y = yBottom;
+        break;
+    }
+
+    return { x, y };
+  };
+
   overlays.forEach((overlay, index) => {
     command.input(overlay.path);
     const next = `[outv${index + 1}]`;
-    const x = '(main_w-overlay_w)/2'; // Center x-position
-    const y = `main_h-overlay_h-${bottomPadding}`; // 16 pixels from bottom
+    const { x, y } = getPosition(overlay);
     filters.push(
       `${last}[${index + 1}:v]overlay=${x}:${y}:enable='between(t,${
         overlay.start

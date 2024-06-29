@@ -10,7 +10,7 @@ export const buildCaption = async (
   bounds: Bounds,
   outputPath: string,
   config?: OverlayConfig
-): Promise<void> => {
+): Promise<{ width: number; height: number }> => {
   const canvas = createCanvas(bounds.width, bounds.height);
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('could not get canvas context');
@@ -55,6 +55,10 @@ export const buildCaption = async (
   const croppedContext = cropToContent(ctx);
   const buffer = croppedContext.canvas.toBuffer('image/png');
   await writeFile(outputPath, buffer);
+  return {
+    width: croppedContext.canvas.width,
+    height: croppedContext.canvas.height,
+  };
 };
 
 /**

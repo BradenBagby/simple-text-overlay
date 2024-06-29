@@ -8,6 +8,17 @@ export type OverlayConfig = {
   fontConfig?: FontConfig;
   backgroundConfig?: BackgroundConfig;
   ainmationConfig?: AnimationConfig;
+  overlayAlign?:
+    | 'topLeft'
+    | 'bottomLeft'
+    | 'centerLeft'
+    | 'topRight'
+    | 'bottomRight'
+    | 'centerRight'
+    | 'topCenter'
+    | 'bottomCenter'
+    | 'centerCenter';
+  overlayMargin?: number;
 };
 
 export type FontConfig = {
