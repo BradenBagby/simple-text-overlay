@@ -33,8 +33,6 @@ export const buildCaption = async (
   canvas.height = height;
   setContext();
 
-  console.log({ totalTextHeight, height });
-
   // draw
   let yPos = lineHeight + padding;
   for (let i = 0; i < lines.length; i++) {
@@ -44,7 +42,8 @@ export const buildCaption = async (
     yPos += lineHeight;
   }
 
-  const buffer = canvas.toBuffer('image/png');
+  const croppedContext = cropToContent(ctx);
+  const buffer = croppedContext.canvas.toBuffer('image/png');
   writeFileSync(outputPath, buffer);
 };
 
@@ -87,64 +86,63 @@ const getLines = (
   return lines;
 };
 
-type GetFontSizeArgs = {
-  text: string;
-  singleFrame: string;
-  config: OverlayConfig;
-};
-export const getTextSize = async ({
-  text,
-  singleFrame,
-  config,
-}: GetFontSizeArgs): Promise<Bounds> => {
-  const { fontPath, fontSize } = config;
-  // a little hackey
-  const helper = 83;
-  const helper2 = 97;
-  const complexFilterString = `drawtext=fontfile=${fontPath}:fontsize=${fontSize}:text='${text}':x='0+0*print(${helper} * tw)':y='0+0*print(${helper2} * th)'`;
-  let found = false;
-  const bounds = { width: -1, height: -1 };
+const cropToContent = (
+  originalCtx: CanvasRenderingContext2D
+): CanvasRenderingContext2D => {
+  // Get the dimensions of the original canvas
+  const { width: originalWidth, height: originalHeight } = originalCtx.canvas;
 
-  const logs: string[] = [];
-  return new Promise((resolve, reject) => {
-    ffmpeg()
-      .input(singleFrame)
-      .complexFilter(complexFilterString)
-      .on('stderr', stderrLine => {
-        if (found || typeof stderrLine !== 'string') return;
-        if (stderrLine.includes('.')) {
-          const number = parseFloat(stderrLine);
-          if (!isNaN(number)) {
-            const checkWidth = number / helper;
-            if (checkWidth % 1 === 0) {
-              bounds.width = checkWidth;
-              if (bounds.height > 0) {
-                found = true;
-                resolve(bounds);
-              }
-            }
-            const checkHeight = number / helper2;
-            if (checkHeight % 1 === 0) {
-              bounds.height = checkHeight;
-              if (bounds.width > 0) {
-                resolve(bounds);
-                found = true;
-              }
-            }
-            logs.push(
-              `number: ${number}, checkWidth: ${checkWidth}, checkHeight: ${checkHeight}`
-            );
-          }
-        }
-      })
-      .outputOptions(['-vframes 1', '-f null'])
-      .output('-')
-      .on('end', () => {
-        if (!found) return reject('could not find text size');
-      })
-      .on('error', err => {
-        reject(err);
-      })
-      .run();
-  });
+  // Find the bounding box of non-transparent content
+  let minX = originalWidth;
+  let minY = originalHeight;
+  let maxX = -1;
+  let maxY = -1;
+
+  // Get the image data of the entire canvas
+  const imageData = originalCtx.getImageData(
+    0,
+    0,
+    originalWidth,
+    originalHeight
+  );
+  const { data, width, height } = imageData;
+
+  // Iterate over all pixels to find the bounding box of non-transparent content
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const index = (y * width + x) * 4;
+      const alpha = data[index + 3];
+
+      if (alpha > 0) {
+        // Found non-transparent pixel
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+
+  // Calculate dimensions of the bounding box
+  const boundingBoxWidth = maxX - minX + 1;
+  const boundingBoxHeight = maxY - minY + 1;
+
+  // Create a new canvas for the cropped image
+  const croppedCanvas = createCanvas(boundingBoxWidth, boundingBoxHeight);
+  const croppedCtx = croppedCanvas.getContext('2d');
+
+  // Draw the cropped region onto the new canvas
+  croppedCtx.drawImage(
+    originalCtx.canvas,
+    minX,
+    minY,
+    boundingBoxWidth,
+    boundingBoxHeight,
+    0,
+    0,
+    boundingBoxWidth,
+    boundingBoxHeight
+  );
+
+  return croppedCtx;
 };
