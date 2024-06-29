@@ -3,7 +3,7 @@ import { RESOURCES_PATH, TEST_OUTPUT_PATH } from './constants';
 import { addOverlay } from '../src';
 import { Overlay, OverlayAlignOptions } from '../src/types';
 
-describe.only('index', () => {
+describe('index', () => {
   const cowVideo = join(RESOURCES_PATH, 'cows-moo.mp4');
 
   const getTestOutput = (name: string) => join(TEST_OUTPUT_PATH, name);

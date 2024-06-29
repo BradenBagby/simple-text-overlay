@@ -51,10 +51,11 @@ const overlayImagesOnVideo = async (
   const command = ffmpeg();
   command.input(src);
 
-  // Start building complex filter string
+  // complex filter for each overlay
   const filters: string[] = [];
   let last = '[0:v]';
 
+  // get position for an overlay
   const getPosition = (overlay: ImageOverlay) => {
     let x = '0';
     let y = '0';
@@ -124,14 +125,10 @@ const overlayImagesOnVideo = async (
   await new Promise<void>((resolve, reject) => {
     command
       .complexFilter(filterString)
-      .outputOptions('-map', '0:a')
-      // Output
+      .outputOptions('-map', '0:a') // map audio to output
       .output(output)
       .outputOptions('-map', `[outv${overlays.length}]`)
       .on('end', () => resolve())
-      .on('start', command =>
-        console.log(`Spawned Ffmpeg with command: ${command as string}`)
-      )
       .on('error', err => reject(err))
       .run();
   });

@@ -5,6 +5,9 @@ import { promisify } from 'util';
 import { DEFAULT_FONT_CONFOG } from './constants';
 const writeFile = promisify(writeFileCallback);
 
+/**
+ * Builds a caption image from given text and config
+ */
 export const buildCaption = async (
   text: string,
   bounds: Bounds,
@@ -100,6 +103,9 @@ const getLines = (
   return lines;
 };
 
+/**
+ * Crop context to its content
+ */
 const cropToContent = (
   originalCtx: CanvasRenderingContext2D
 ): CanvasRenderingContext2D => {
