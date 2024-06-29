@@ -7,14 +7,14 @@ const writeFile = promisify(writeFileCallback);
 
 export const buildCaption = async (
   text: string,
-  config: OverlayConfig,
   bounds: Bounds,
-  outputPath: string
+  outputPath: string,
+  config?: OverlayConfig
 ): Promise<void> => {
   const canvas = createCanvas(bounds.width, bounds.height);
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('could not get canvas context');
-  const { fontConfig, backgroundConfig } = config;
+  const { fontConfig, backgroundConfig } = config || {};
 
   // defaults
   const fontName = fontConfig?.name || DEFAULT_FONT_CONFOG.name;
