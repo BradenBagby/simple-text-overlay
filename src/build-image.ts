@@ -21,23 +21,26 @@ export const buildCaption = async (
   setContext();
 
   // calcluate
-  const maxWidth = bounds.width - 32; // TODO: padding
+  const padding = 16;
+  const p2 = padding * 2;
+  const maxWidth = bounds.width - p2; // TODO: padding
   const lineHeight = config.fontSize * 1;
   const lines = getLines(ctx, text, maxWidth);
-  const height = lines.length * lineHeight;
+  const totalTextHeight = lines.length * lineHeight;
+  const height = totalTextHeight + p2;
   console.log('lines', lines);
   if (height > bounds.height) throw new Error('text too long to fit in bounds');
   canvas.height = height;
   setContext();
 
-  console.log('height: ', height);
+  console.log({ totalTextHeight, height });
 
   // draw
-  let yPos = lineHeight;
+  let yPos = lineHeight + padding;
   for (let i = 0; i < lines.length; i++) {
     console.log(yPos);
     const line = lines[i];
-    ctx.fillText(line, bounds.width / 2, yPos);
+    ctx.fillText(line.text, bounds.width / 2, yPos);
     yPos += lineHeight;
   }
 
@@ -48,28 +51,38 @@ export const buildCaption = async (
 /**
  * Split caption into lines that will fit into max width
  */
+type Line = {
+  text: string;
+  width: number;
+};
 const getLines = (
   ctx: CanvasRenderingContext2D,
   text: string,
   maxWidth: number
-) => {
+): Line[] => {
+  // take text, return Line with width and height
+  const calc = (line: string) => {
+    const metrics = ctx.measureText(line);
+    return { text: line, width: metrics.width };
+  };
+
   const words = text.split(' ');
   let line = '';
-  const lines: string[] = [];
+  const lines: Line[] = [];
 
   for (let n = 0; n < words.length; n++) {
     const testLine = line + words[n] + ' ';
     const metrics = ctx.measureText(testLine);
     const testWidth = metrics.width;
     if (testWidth > maxWidth && n > 0) {
-      lines.push(line);
+      lines.push(calc(line));
       line = words[n] + ' ';
     } else {
       line = testLine;
     }
   }
 
-  if (line.length) lines.push(line.trim());
+  if (line.length) lines.push(calc(line.trim()));
 
   return lines;
 };
