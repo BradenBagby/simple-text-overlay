@@ -1,5 +1,5 @@
 {
-  "name": "typescript-npm-package-template",
+  "name": "simple-text-overlay",
   "version": "0.0.0-development",
   "description": "A template for creating npm packages using TypeScript and VSCode",
   "main": "./lib/index.js",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BradenBagby/typescript-npm-package-template.git"
+    "url": "git+https://github.com/BradenBagby/simple-text-overlay.git"
   },
   "license": "MIT",
   "author": {
@@ -42,9 +42,9 @@
     "codecov"
   ],
   "bugs": {
-    "url": "https://github.com/BradenBagby/typescript-npm-package-template/issues"
+    "url": "https://github.com/BradenBagby/simple-text-overlay/issues"
   },
-  "homepage": "https://github.com/BradenBagby/typescript-npm-package-template#readme",
+  "homepage": "https://github.com/BradenBagby/simple-text-overlay#readme",
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
     "gm": "^1.25.0",
