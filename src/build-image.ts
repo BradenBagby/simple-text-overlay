@@ -1,17 +1,73 @@
 import ffmpeg from 'fluent-ffmpeg';
 import * as gm from 'gm';
 import { Bounds, OverlayConfig } from './types';
-const im = gm.subClass({ imageMagick: 'magick' });
+import {
+  createCanvas,
+  loadImage,
+  Canvas,
+  registerFont,
+  CanvasRenderingContext2D,
+} from 'canvas';
+import { writeFileSync } from 'fs';
 
-export const buildImage = async (
+export const buildCaption = async (
   text: string,
   config: OverlayConfig,
-  bounds: Bounds
-): Promise<string> => {
+  bounds: Bounds,
+  outputPath: string
+): Promise<void> => {
   console.log('called');
-  return new Promise((resolve, reject) => {
-    resolve('hey');
-  });
+  const canvas = createCanvas(bounds.width, bounds.height);
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('could not get canvas context');
+
+  ctx.font = `${config.fontSize}px Arial`;
+  ctx.fillStyle = 'white';
+  ctx.textAlign = 'center';
+
+  const maxWidth = bounds.width * 0.8; // Optional: Adjust based on your needs
+  const lineHeight = config.fontSize * 1.2;
+
+  const wrapText = (
+    context: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    maxWidth: number,
+    lineHeight: number
+  ) => {
+    const words = text.split(' ');
+    let line = '';
+    let yPos = y;
+
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = context.measureText(testLine);
+      const testWidth = metrics.width;
+
+      if (testWidth > maxWidth && n > 0) {
+        context.fillText(line, x, yPos);
+        line = words[n] + ' ';
+        yPos += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+
+    context.fillText(line, x, yPos);
+  };
+
+  wrapText(
+    ctx,
+    text,
+    canvas.width / 2,
+    canvas.height / 2,
+    maxWidth,
+    lineHeight
+  );
+
+  const buffer = canvas.toBuffer('image/png');
+  writeFileSync(outputPath, buffer);
 };
 
 type GetFontSizeArgs = {
