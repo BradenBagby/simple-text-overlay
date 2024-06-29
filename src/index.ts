@@ -61,8 +61,8 @@ const overlayImagesOnVideo = async (
 
     const centerX = `(main_w-overlay_w)/2 - ${overlay.width / 2}`;
     const centerY = `(main_h-overlay_h)/2 - ${overlay.height / 2}`;
-    const yBottom = `main_h-overlay_h-${margin + overlay.height}`;
-    const xRight = `main_w-overlay_w-${margin + overlay.width}`;
+    const yBottom = `main_h-overlay_h - ${margin}`;
+    const xRight = `main_w-overlay_w - ${margin}`;
 
     switch (config?.overlayAlign) {
       case 'topLeft':
