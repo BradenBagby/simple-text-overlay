@@ -1,4 +1,4 @@
-import { buildImage } from '../src/build-image';
+import { buildImage } from '../src/caption-builder';
 
 describe('index', () => {
   describe('simple-text-overlay', () => {

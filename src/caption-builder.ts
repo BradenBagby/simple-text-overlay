@@ -1,7 +1,9 @@
 import { CanvasRenderingContext2D, createCanvas } from 'canvas';
-import ffmpeg from 'fluent-ffmpeg';
-import { writeFileSync } from 'fs';
+import { writeFile as writeFileCallback } from 'fs';
 import { Bounds, OverlayConfig } from './types';
+import { promisify } from 'util';
+import { DEFAULT_FONT_CONFOG } from './constants';
+const writeFile = promisify(writeFileCallback);
 
 export const buildCaption = async (
   text: string,
@@ -12,39 +14,47 @@ export const buildCaption = async (
   const canvas = createCanvas(bounds.width, bounds.height);
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('could not get canvas context');
+  const { fontConfig, backgroundConfig } = config;
 
-  const setContext = () => {
-    ctx.font = `${config.fontSize}px Arial`;
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
+  // defaults
+  const fontName = fontConfig?.name || DEFAULT_FONT_CONFOG.name;
+  const fontSize = fontConfig?.size || DEFAULT_FONT_CONFOG.size;
+  const fontColor = fontConfig?.color || DEFAULT_FONT_CONFOG.color;
+  const fontAlign = fontConfig?.align || DEFAULT_FONT_CONFOG.align;
+  const fontLineHeight =
+    fontConfig?.lineHeight || DEFAULT_FONT_CONFOG.lineHeight;
+  const padding = backgroundConfig?.padding || 0;
+
+  const setContextFromConfig = () => {
+    ctx.font = `${fontSize}px ${fontName}`;
+    ctx.fillStyle = fontColor;
+    ctx.textAlign = fontAlign;
   };
-  setContext();
+  setContextFromConfig();
 
   // calcluate
-  const padding = 16;
   const p2 = padding * 2;
-  const maxWidth = bounds.width - p2; // TODO: padding
-  const lineHeight = config.fontSize * 1;
+  const maxWidth = bounds.width - p2;
   const lines = getLines(ctx, text, maxWidth);
+  const lineHeight = fontLineHeight * fontSize;
   const totalTextHeight = lines.length * lineHeight;
   const height = totalTextHeight + p2;
-  console.log('lines', lines);
   if (height > bounds.height) throw new Error('text too long to fit in bounds');
   canvas.height = height;
-  setContext();
+  setContextFromConfig();
 
   // draw
   let yPos = lineHeight + padding;
   for (let i = 0; i < lines.length; i++) {
-    console.log(yPos);
     const line = lines[i];
     ctx.fillText(line.text, bounds.width / 2, yPos);
     yPos += lineHeight;
   }
 
+  // finalize
   const croppedContext = cropToContent(ctx);
   const buffer = croppedContext.canvas.toBuffer('image/png');
-  writeFileSync(outputPath, buffer);
+  await writeFile(outputPath, buffer);
 };
 
 /**

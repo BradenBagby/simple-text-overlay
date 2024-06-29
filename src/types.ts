@@ -1,8 +1,3 @@
-export type AddOverlayArgs = {
-  overlays: Overlay[];
-  src: string;
-  fontFile: string;
-};
 export type Overlay = {
   text: string;
   start: number;
@@ -10,9 +5,27 @@ export type Overlay = {
 };
 
 export type OverlayConfig = {
-  fontPath: string;
-  fontSize: number;
-  // TODO: background and stuff
+  fontConfig?: FontConfig;
+  backgroundConfig?: BackgroundConfig;
+  ainmationConfig?: AnimationConfig;
+};
+
+export type FontConfig = {
+  path?: string;
+  name?: string;
+  size?: number;
+  color?: string;
+  align?: 'center' | 'left' | 'right';
+  lineHeight?: number;
+};
+
+export type BackgroundConfig = {
+  color: string;
+  padding: number;
+};
+
+export type AnimationConfig = {
+  duration: number;
 };
 
 export type Bounds = {
