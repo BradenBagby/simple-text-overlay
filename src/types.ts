@@ -4,20 +4,22 @@ export type Overlay = {
   end: number;
 };
 
+export type OverlayAlignOptions =
+  | 'topLeft'
+  | 'bottomLeft'
+  | 'centerLeft'
+  | 'topRight'
+  | 'bottomRight'
+  | 'centerRight'
+  | 'topCenter'
+  | 'bottomCenter'
+  | 'centerCenter';
+
 export type OverlayConfig = {
   fontConfig?: FontConfig;
   backgroundConfig?: BackgroundConfig;
   ainmationConfig?: AnimationConfig;
-  overlayAlign?:
-    | 'topLeft'
-    | 'bottomLeft'
-    | 'centerLeft'
-    | 'topRight'
-    | 'bottomRight'
-    | 'centerRight'
-    | 'topCenter'
-    | 'bottomCenter'
-    | 'centerCenter';
+  overlayAlign?: OverlayAlignOptions;
   overlayMargin?: number;
 };
 
