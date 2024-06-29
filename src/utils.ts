@@ -19,17 +19,3 @@ export const getVideoInfo = async (
   if (!height) throw new Error('No height found for video');
   return { duration, bounds: { width, height } };
 };
-
-export const getSingleFrame = (src: string, output: string) =>
-  new Promise<void>((resolve, reject) => {
-    ffmpeg(src)
-      .outputOptions('-vf', 'select=eq(n\\,0)', '-vsync', 'vfr')
-      .output(output)
-      .on('end', () => {
-        resolve();
-      })
-      .on('error', err => {
-        reject(err);
-      })
-      .run();
-  });

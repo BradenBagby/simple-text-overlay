@@ -16,7 +16,7 @@ describe('caption-builder', () => {
 
   test('should build caption for a single line', async () => {
     await buildCaption(
-      'Hello World',
+      'Hey World',
       bounds,
       getTestOutput('build-caption-single-line.png')
     );
