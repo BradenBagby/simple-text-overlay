@@ -119,4 +119,4 @@ dist
 lib/
 
 # Ignore the output files created by tests
-test/output
+test/output/*
