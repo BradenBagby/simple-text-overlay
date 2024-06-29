@@ -117,3 +117,6 @@ dist
 
 # Compiled code
 lib/
+
+# Ignore the output files created by tests
+test/output

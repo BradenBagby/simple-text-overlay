@@ -1,4 +1,4 @@
-import { BackgroundConfig, FontConfig } from './types';
+import { FontConfig } from './types';
 
 export const DEFAULT_FONT_CONFOG: Required<FontConfig> = {
   name: 'Arial',

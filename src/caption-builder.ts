@@ -40,7 +40,7 @@ export const buildCaption = async (
   const totalTextHeight = lines.length * lineHeight;
   const height = totalTextHeight + p2;
   if (height > bounds.height) throw new Error('text too long to fit in bounds');
-  canvas.height = height;
+  canvas.height = height + lineHeight; // add extra line for letters that hang below the line
   setContextFromConfig();
 
   // draw

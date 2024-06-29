@@ -21,7 +21,7 @@ describe.only('index', () => {
       { start: 8, end: 9, text: 'It' },
       { start: 9, end: 10, text: 'should' },
       { start: 10, end: 11, text: 'end' },
-      { start: 11, end: 12, text: 'at.' },
+      { start: 11, end: 12, text: 'at' },
       { start: 12, end: 13, text: 'exactly' },
       { start: 13, end: 14, text: '15' },
       { start: 14, end: 15, text: 'seconds!' },
