@@ -19,7 +19,7 @@ npm install simple-text-overlay
 ## Usage
 
 ```ts
-import { addOverlay } from 'simple-text-overlay';
+import { addOverlay, Overlay } from 'simple-text-overlay';
 
 const overlays: Overlay[] = [
   { start: 0, end: 1, text: 'Hello' },
@@ -32,6 +32,7 @@ const overlays: Overlay[] = [
   { start: 7, end: 8, text: 'caption.' },
 ];
 
+// optional config
 const config = {};
 
 addOverlay('src.mp4', overlays, 'output.mp4', config);
