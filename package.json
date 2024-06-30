@@ -48,8 +48,6 @@
   "homepage": "https://github.com/BradenBagby/simple-text-overlay#readme",
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
-    "gm": "^1.25.0",
-    "imagemagick": "^0.1.3",
     "uuid": "^9.0.1",
     "canvas": "^2.11.2"
   },
