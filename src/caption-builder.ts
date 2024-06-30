@@ -25,11 +25,12 @@ export const buildCaption = async (
   const fontColor = fontConfig?.color || DEFAULT_FONT_CONFOG.color;
   const fontLineHeight =
     fontConfig?.lineHeight || DEFAULT_FONT_CONFOG.lineHeight;
+  const fontWeight = fontConfig?.weight || DEFAULT_FONT_CONFOG.weight;
   const padding = backgroundConfig?.padding || 0;
 
   // if canvas size is changed, need to reset context
   const setContextFromConfig = () => {
-    ctx.font = `${fontSize}px ${fontName}`;
+    ctx.font = `${fontWeight} ${fontSize}px ${fontName}`;
     ctx.fillStyle = fontColor;
     ctx.textAlign = 'center';
   };

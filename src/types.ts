@@ -29,6 +29,7 @@ export type FontConfig = {
   size?: number;
   color?: string;
   lineHeight?: number;
+  weight?: 'normal' | 'bold' | 'bolder' | 'lighter' | number;
 };
 
 export type BackgroundConfig = {

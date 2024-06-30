@@ -32,7 +32,7 @@ describe('caption-builder', () => {
     });
   });
 
-  describe.only('background caption', () => {
+  describe('background caption', () => {
     test('should build caption with a background for a single line', async () => {
       await buildCaption(
         'Hey World',
@@ -47,7 +47,24 @@ describe('caption-builder', () => {
         'Hey World',
         bounds,
         getTestOutput('caption-background-radius-short.png'),
-        { backgroundConfig: { padding: 8, color: 'red', borderRadius: 12 } }
+        {
+          backgroundConfig: {
+            padding: 8,
+            color: 'red',
+            borderRadius: 12,
+          },
+        }
+      );
+    });
+  });
+
+  describe('font caption', () => {
+    test('should build caption with a bold font', async () => {
+      await buildCaption(
+        'Hey World',
+        bounds,
+        getTestOutput('caption-font-bold.png'),
+        { fontConfig: { weight: 'bold' } }
       );
     });
   });
