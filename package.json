@@ -1,6 +1,6 @@
 {
   "name": "simple-text-overlay",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Add text overlays (with audio) to a video file. It allows you to specify multiple overlays with configurable parameters such as text content, display duration, position, font settings, background style, and optional animations. You can also specify an audio file to be added with the overlay",
   "main": "./lib/index.js",
   "files": [
@@ -46,7 +46,6 @@
   "homepage": "https://github.com/BradenBagby/simple-text-overlay#readme",
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
-    "uuid": "^9.0.1",
     "canvas": "^2.11.2"
   },
   "devDependencies": {

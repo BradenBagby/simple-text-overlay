@@ -54,7 +54,7 @@ describe('index', () => {
     );
   }, 100000);
 
-  it.only('should generate captions for a video with audio', async () => {
+  it('should generate captions for a video with audio', async () => {
     await addOverlay(cowVideo, overlaysAudio, getTestOutput('cow-audio.mp4'), {
       overlayAlign: 'bottomCenter',
       fontConfig: {

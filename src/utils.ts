@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import ffmpeg, { FfprobeData } from 'fluent-ffmpeg';
 import { promisify } from 'util';
 import { Bounds } from './types';
@@ -19,3 +20,12 @@ export const getVideoInfo = async (
   if (!height) throw new Error('No height found for video');
   return { duration, bounds: { width, height } };
 };
+
+/**
+ * Generate random hash
+ */
+export const randomHash = (length = 16): string =>
+  crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString('hex')
+    .slice(0, length);

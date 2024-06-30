@@ -14,12 +14,11 @@ npm install simple-text-overlay
 
 ## Prerequisites
 
-### ffmpeg and ffprobe
+### ffmpeg
 
 This package uses fluent-ffmpeg as a dependency to add the overlays on the video. You will need ffmpeg installed on your machine.
 
-see fluent-ffmpeg package for prerequisites and installing ffmpeg
-[fluent-ffmpeg](https://www.npmjs.com/package/fluent-ffmpeg?activeTab=readme)
+See [fluent-ffmpeg](https://www.npmjs.com/package/fluent-ffmpeg?activeTab=readme) package for prerequisites and installing ffmpeg.
 
 ## Usage
 

@@ -1,12 +1,11 @@
-import os from 'os';
-import { Overlay, OverlayConfig } from './types';
-import { getVideoInfo } from './utils';
-import { v4 } from 'uuid';
-import { join } from 'path';
+import ffmpeg from 'fluent-ffmpeg';
 import { mkdir as mkDirCallback } from 'fs';
+import os from 'os';
+import { join } from 'path';
 import { promisify } from 'util';
 import { buildCaption } from './caption-builder';
-import ffmpeg from 'fluent-ffmpeg';
+import { Overlay, OverlayConfig } from './types';
+import { getVideoInfo, randomHash } from './utils';
 export * from './types';
 
 const mkdir = promisify(mkDirCallback);
@@ -20,7 +19,7 @@ export const addOverlay = async (
   const { bounds } = await getVideoInfo(src);
 
   // build each caption
-  const tempDir = join(os.tmpdir(), v4());
+  const tempDir = join(os.tmpdir(), randomHash());
   await mkdir(tempDir);
   const imageOverlays: ImageOverlay[] = [];
   for (let i = 0; i < overlays.length; i++) {
