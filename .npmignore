@@ -1,0 +1,32 @@
+# Ignore node_modules directory
+node_modules
+
+# Ignore test files and directories
+test/
+tests/
+*.spec.js
+
+# Ignore build and temporary files
+dist/
+build/
+temp/
+*.log
+
+# Ignore documentation and examples
+docs/
+examples/
+
+# Ignore version control files
+.git
+.gitignore
+.gitattributes
+.github/
+
+# Ignore editor and OS-specific files
+.DS_Store
+Thumbs.db
+.vscode/
+.husky/
+
+# Ignore personal configuration files
+.npmrc
