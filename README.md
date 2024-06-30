@@ -1,22 +1,23 @@
 # simple-text-overlay
 
-<!-- [![npm package][npm-img]][npm-url]
-[![Build Status][build-img]][build-url]
-[![Downloads][downloads-img]][downloads-url]
-[![Issues][issues-img]][issues-url]
-[![Code Coverage][codecov-img]][codecov-url]
-[![Commitizen Friendly][commitizen-img]][commitizen-url]
-[![Semantic Release][semantic-release-img]][semantic-release-url] -->
-
-> Simple Text overlay
-
-## Install
+## Installation
 
 ```bash
 npm install simple-text-overlay
 ```
 
+## Prerequisites
+
+### ffmpeg and ffprobe
+
+This package uses fluent-ffmpeg as a dependency to add the overlays on the video. You will need ffmpeg installed on your machine.
+
+see fluent-ffmpeg package for prerequisites and installing ffmpeg
+[fluent-ffmpeg](https://www.npmjs.com/package/fluent-ffmpeg?activeTab=readme)
+
 ## Usage
+
+This example shows a simple overlay with the default config. For all config options refer to the documentation.
 
 ```ts
 import { addOverlay, Overlay } from 'simple-text-overlay';
