@@ -131,7 +131,7 @@ export const overlayImagesOnVideo = async (
     filters.push(
       `${last}[${index + 1}:v]overlay=${x}:${y}:enable='between(t,${
         overlay.start
-      },${overlay.end})'${next}`
+      },${overlay.end || -1})'${next}` // -1 shouldnt happen if overlay was defaulted correctly
     );
     inputs++;
     last = next;

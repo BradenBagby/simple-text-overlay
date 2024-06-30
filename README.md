@@ -27,14 +27,14 @@ This example shows a simple overlay with the default config. For all config opti
 import { addOverlay, Overlay } from 'simple-text-overlay';
 
 const overlays: Overlay[] = [
-  { start: 0, end: 1, text: 'Hello' },
-  { start: 1, end: 2, text: 'World!' },
-  { start: 2, end: 3, text: 'Each' },
-  { start: 3, end: 4, text: 'second' },
-  { start: 4, end: 5, text: 'is' },
-  { start: 5, end: 6, text: 'a' },
-  { start: 6, end: 7, text: 'new' },
-  { start: 7, end: 8, text: 'caption.' },
+  { start: 0, text: 'Hello' },
+  { start: 1, text: 'World!' },
+  { start: 2, text: 'Each' },
+  { start: 3, text: 'second' },
+  { start: 4, text: 'is' },
+  { start: 5, text: 'a' },
+  { start: 6, text: 'new' },
+  { start: 7, text: 'caption.' },
 ];
 
 // optional config
@@ -90,7 +90,7 @@ An overlay object defines a text overlay that will be displayed on the video.
 export type Overlay = {
   text: string; // The text content of the overlay.
   start: number; // The start time (in seconds) when the overlay should appear.
-  end: number; // The end time (in seconds) when the overlay should disappear.
+  end?: number; // The end time (in seconds) when the overlay should disappear. If undefined, will default to the next overlay's start or the duration of the clip
 };
 ```
 
@@ -154,7 +154,10 @@ const overlays: Overlay[] = [
   {
     text: 'Hello, World!',
     start: 0,
-    end: 5,
+  },
+  {
+    text: 'This is another caption.',
+    start: 5,
   },
 ];
 

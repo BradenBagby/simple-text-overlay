@@ -2,7 +2,7 @@
 export type Overlay = {
   text: string;
   start: number;
-  end: number;
+  end?: number;
 };
 
 // OverlayAlignOptions is a type that represents the possible positions of an overlay on a video.
