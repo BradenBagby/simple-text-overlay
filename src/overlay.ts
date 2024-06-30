@@ -65,7 +65,7 @@ export const overlayImagesOnVideo = async (
     let x = '0';
     let y = '0';
 
-    const centerX = `(main_w-overlay_w)/2 - ${overlay.width / 2}`;
+    const centerX = '(main_w-overlay_w)/2';
     const centerY = `(main_h-overlay_h)/2 - ${overlay.height / 2}`;
     const yBottom = `main_h-overlay_h - ${margin}`;
     const xRight = `main_w-overlay_w - ${margin}`;
