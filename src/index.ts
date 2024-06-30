@@ -16,7 +16,7 @@ export const addOverlay = async (
   output: string,
   config?: OverlayConfig
 ): Promise<void> => {
-  const { duration, bounds } = await getVideoInfo(src);
+  const { bounds } = await getVideoInfo(src);
 
   // build each caption
   const tempDir = join(os.tmpdir(), v4());
