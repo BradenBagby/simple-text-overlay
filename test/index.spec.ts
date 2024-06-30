@@ -67,6 +67,11 @@ describe('index', () => {
 
   it('should generate captions for a video with audio', async () => {
     await addOverlay(cowVideo, overlaysAudio, getTestOutput('cow-audio.mp4'), {
+      overlayAlign: 'centerCenter',
+      fontConfig: {
+        size: 100,
+        color: 'white',
+      },
       audioPath: testAudio,
     });
   });

@@ -32,15 +32,13 @@
   },
   "types": "./lib/index.d.ts",
   "keywords": [
-    "boilerplate",
-    "template",
-    "typescript",
-    "vscode",
-    "jest",
-    "husky",
-    "commitizen",
-    "semantic-release",
-    "codecov"
+    "captions",
+    "subtitles",
+    "video",
+    "caption",
+    "overlay",
+    "text",
+    "transcript"
   ],
   "bugs": {
     "url": "https://github.com/BradenBagby/simple-text-overlay/issues"
