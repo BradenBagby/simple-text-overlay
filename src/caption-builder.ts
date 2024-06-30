@@ -27,6 +27,7 @@ export const buildCaption = async (
     fontConfig?.lineHeight || DEFAULT_FONT_CONFOG.lineHeight;
   const padding = backgroundConfig?.padding || 0;
 
+  // if canvas size is changed, need to reset context
   const setContextFromConfig = () => {
     ctx.font = `${fontSize}px ${fontName}`;
     ctx.fillStyle = fontColor;
@@ -69,37 +70,31 @@ export const buildCaption = async (
   };
 };
 
+/**
+ * Adds background to canvas and returns a new one
+ */
 const addBackground = (canvas: Canvas, config: BackgroundConfig): Canvas => {
   const { padding, color, borderRadius } = config;
   const originalWidth = canvas.width;
   const originalHeight = canvas.height;
 
-  const newWidth = originalWidth + 2 * padding;
-  const newHeight = originalHeight + 2 * padding;
+  const width = originalWidth + 2 * padding;
+  const height = originalHeight + 2 * padding;
 
-  // Create a new canvas with increased dimensions
-  const newCanvas = createCanvas(newWidth, newHeight);
+  // Create a new canvas with increased dimensions and set context
+  const newCanvas = createCanvas(width, height);
   const context = newCanvas.getContext('2d');
-
-  // Function to draw a rounded rectangle
-  const drawRoundedRect = (
-    ctx: CanvasRenderingContext2D,
-    width: number,
-    height: number,
-    radius: number
-  ) => {
-    ctx.beginPath();
-    ctx.moveTo(radius, 0);
-    ctx.arcTo(width, 0, width, height, radius);
-    ctx.arcTo(width, height, 0, height, radius);
-    ctx.arcTo(0, height, 0, 0, radius);
-    ctx.arcTo(0, 0, width, 0, radius);
-    ctx.closePath();
-  };
-
-  // Fill the background with the specified color and border radius
   context.fillStyle = color;
-  drawRoundedRect(context, newWidth, newHeight, borderRadius || 0);
+
+  // draw background
+  const radius = borderRadius || 0;
+  context.beginPath();
+  context.moveTo(radius, 0);
+  context.arcTo(width, 0, width, height, radius);
+  context.arcTo(width, height, 0, height, radius);
+  context.arcTo(0, height, 0, 0, radius);
+  context.arcTo(0, 0, width, 0, radius);
+  context.closePath();
   context.fill();
 
   // Draw the original canvas onto the new canvas with padding
