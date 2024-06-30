@@ -1,6 +1,6 @@
 {
   "name": "simple-text-overlay",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Add text overlays (with audio) to a video file. It allows you to specify multiple overlays with configurable parameters such as text content, display duration, position, font settings, background style, and optional animations. You can also specify an audio file to be added with the overlay",
   "main": "./lib/index.js",
   "files": [

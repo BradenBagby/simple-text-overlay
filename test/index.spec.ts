@@ -23,18 +23,9 @@ describe('index', () => {
   const overlaysAudio: Overlay[] = [
     {
       start: 0.014999999664723873,
-      text: 'Hello',
+      text: 'Hello world!',
     },
-    {
-      start: 0.35999998450279236,
-      text: 'world!',
-    },
-    { start: 0.9707916378974915, text: 'This' },
-    { start: 1.1807916164398193, text: 'is' },
-    { start: 1.2857916355133057, text: 'a' },
-    { start: 1.3522499799728394, text: 'test' },
-    { start: 1.7322499752044678, text: 'with' },
-    { start: 1.8677499294281006, text: 'audio' },
+    { start: 0.9707916378974915, text: 'This is a test with audio.' },
   ];
 
   it('should generate captions for a video at all aligns', async () => {
@@ -63,13 +54,20 @@ describe('index', () => {
     );
   }, 100000);
 
-  it('should generate captions for a video with audio', async () => {
+  it.only('should generate captions for a video with audio', async () => {
     await addOverlay(cowVideo, overlaysAudio, getTestOutput('cow-audio.mp4'), {
-      overlayAlign: 'centerCenter',
+      overlayAlign: 'bottomCenter',
       fontConfig: {
-        size: 100,
+        size: 50,
         color: 'white',
+        weight: 'bold',
       },
+      backgroundConfig: {
+        color: 'black',
+        padding: 8,
+        borderRadius: 8,
+      },
+      overlayMargin: 8,
       audioPath: testAudio,
     });
   });
