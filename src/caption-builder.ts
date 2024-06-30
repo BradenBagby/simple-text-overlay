@@ -84,24 +84,22 @@ const addBackground = (canvas: Canvas, config: BackgroundConfig): Canvas => {
   // Function to draw a rounded rectangle
   const drawRoundedRect = (
     ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
     width: number,
     height: number,
     radius: number
   ) => {
     ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + width, y, x + width, y + height, radius);
-    ctx.arcTo(x + width, y + height, x, y + height, radius);
-    ctx.arcTo(x, y + height, x, y, radius);
-    ctx.arcTo(x, y, x + width, y, radius);
+    ctx.moveTo(radius, 0);
+    ctx.arcTo(width, 0, width, height, radius);
+    ctx.arcTo(width, height, 0, height, radius);
+    ctx.arcTo(0, height, 0, 0, radius);
+    ctx.arcTo(0, 0, width, 0, radius);
     ctx.closePath();
   };
 
   // Fill the background with the specified color and border radius
   context.fillStyle = color;
-  drawRoundedRect(context, 0, 0, newWidth, newHeight, borderRadius || 0);
+  drawRoundedRect(context, newWidth, newHeight, borderRadius || 0);
   context.fill();
 
   // Draw the original canvas onto the new canvas with padding

@@ -47,7 +47,7 @@ describe('caption-builder', () => {
         'Hey World',
         bounds,
         getTestOutput('caption-background-radius-short.png'),
-        { backgroundConfig: { padding: 20, color: 'red', borderRadius: 12 } }
+        { backgroundConfig: { padding: 8, color: 'red', borderRadius: 12 } }
       );
     });
   });
