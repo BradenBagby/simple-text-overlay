@@ -113,7 +113,18 @@ export const overlayImagesOnVideo = async (
     return { x, y };
   };
 
-  overlays.forEach((overlay, index) => {
+  let inputs = 0;
+
+  // add audio input
+  const audioFilePath = config?.audioPath;
+  if (audioFilePath) {
+    command.input(audioFilePath);
+    inputs++;
+  }
+
+  // add each overlay as input and to complex fliter string
+  overlays.forEach(overlay => {
+    const index = inputs;
     command.input(overlay.path);
     const next = `[outv${index + 1}]`;
     const { x, y } = getPosition(overlay);
@@ -122,17 +133,22 @@ export const overlayImagesOnVideo = async (
         overlay.start
       },${overlay.end})'${next}`
     );
+    inputs++;
     last = next;
   });
 
   // Apply complex filter
   const filterString = filters.join(';');
   await new Promise<void>((resolve, reject) => {
+    command.complexFilter(filterString);
+
+    // add or copy audio
+    if (audioFilePath) command.outputOptions('-map 1:a:0');
+    else command.outputOptions('-map', '0:a');
+
     command
-      .complexFilter(filterString)
-      .outputOptions('-map', '0:a') // map audio to output
       .output(output)
-      .outputOptions('-map', `[outv${overlays.length}]`)
+      .outputOptions('-map', `[outv${inputs}]`)
       .on('end', () => resolve())
       .on('error', err => reject(err))
       .run();

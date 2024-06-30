@@ -2,7 +2,6 @@ export type Overlay = {
   text: string;
   start: number;
   end: number;
-  audio?: string;
 };
 
 export type OverlayAlignOptions =
@@ -17,6 +16,7 @@ export type OverlayAlignOptions =
   | 'centerCenter';
 
 export type OverlayConfig = {
+  audioPath?: string;
   fontConfig?: FontConfig;
   backgroundConfig?: BackgroundConfig;
   ainmationConfig?: AnimationConfig;

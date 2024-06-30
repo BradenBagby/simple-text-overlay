@@ -8,7 +8,7 @@ describe('index', () => {
 
   const getTestOutput = (name: string) => join(TEST_OUTPUT_PATH, name);
 
-  const overlays: Overlay[] = [
+  const overlaysNoAudio: Overlay[] = [
     { start: 0, end: 1, text: 'Hello' },
     { start: 1, end: 2, text: 'World!' },
     { start: 2, end: 3, text: 'Each' },
@@ -18,6 +18,39 @@ describe('index', () => {
     { start: 6, end: 7, text: 'new' },
     { start: 7, end: 8, text: 'caption.' },
   ];
+
+  const testAudio = join(RESOURCES_PATH, 'test-audio.mp3');
+  const overlaysAudio = [
+    {
+      start: 0.014999999664723873,
+      end: 0.35999998450279236,
+      text: 'Hello',
+    },
+    {
+      start: 0.35999998450279236,
+      end: 0.9707916378974915,
+      text: 'world!',
+    },
+    { start: 0.9707916378974915, end: 1.1807916164398193, text: 'This' },
+    { start: 1.1807916164398193, end: 1.2857916355133057, text: 'is' },
+    { start: 1.2857916355133057, end: 1.3522499799728394, text: 'a' },
+    { start: 1.3522499799728394, end: 1.7322499752044678, text: 'test' },
+    { start: 1.7322499752044678, end: 1.8677499294281006, text: 'with' },
+    { start: 1.8677499294281006, end: 2, text: 'audio' },
+  ];
+
+  /*
+  [
+      { word: 'Hello', start: 0.014999999664723873 },
+      { word: 'world!', start: 0.35999998450279236 },
+      { word: 'This', start: 0.9707916378974915 },
+      { word: 'is', start: 1.1807916164398193 },
+      { word: 'a', start: 1.2857916355133057 },
+      { word: 'test', start: 1.3522499799728394 },
+      { word: 'with', start: 1.7322499752044678 },
+      { word: 'audio', start: 1.8677499294281006 }
+    ]
+  */
 
   it('should generate captions for a video at all aligns', async () => {
     const aligns: OverlayAlignOptions[] = [
@@ -33,10 +66,21 @@ describe('index', () => {
     ];
     await Promise.all(
       aligns.map(align =>
-        addOverlay(cowVideo, overlays, getTestOutput(`cow-${align}.mp4`), {
-          overlayAlign: align,
-        })
+        addOverlay(
+          cowVideo,
+          overlaysNoAudio,
+          getTestOutput(`cow-${align}.mp4`),
+          {
+            overlayAlign: align,
+          }
+        )
       )
     );
   }, 100000);
+
+  it.only('should generate captions for a video with audio', async () => {
+    await addOverlay(cowVideo, overlaysAudio, getTestOutput('cow-audio.mp4'), {
+      audioPath: testAudio,
+    });
+  });
 });
