@@ -7,6 +7,8 @@ import { buildCaption } from './caption-builder';
 import { ImageOverlay, overlayImagesOnVideo } from './overlay';
 import { Overlay, OverlayConfig } from './types';
 import { getVideoInfo, randomHash } from './utils';
+export { buildCaption } from './caption-builder';
+export { getVideoInfo } from './utils';
 
 const mkdir = promisify(mkDirCallback);
 
